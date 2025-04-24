@@ -4,16 +4,16 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "aggrigator"         # your package name
-version = "0.1.0"           # initial version
+version = "0.1.0b1"           # initial version
 description = "A Python package for aggregation tasks"
 authors = [
   { name="Christoph Karg", email="christoph.karg@mdc-berlin.de" }
 ]
 license = { file = "LICENSE" }
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.10"
 dependencies = [
-  "numpy",
+  "numpy>=2.0",  # TODO fix major version
   "pandas",
   "scipy",
   "matplotlib",
@@ -24,14 +24,13 @@ dependencies = [
   "scikit-learn",
   "scikit-image",
   "libpysal",
-  "esda",
   "openpyxl",
   "numba",
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/Kainmueller-Lab/AggroUQ"
-"Repository" = "https://github.com/Kainmueller-Lab/AggroUQ"
+"Homepage" = "https://github.com/Kainmueller-Lab/aggrigator"
+"Repository" = "https://github.com/Kainmueller-Lab/aggrigator"
 
 [project.optional-dependencies]
 dev = [

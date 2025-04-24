@@ -17,27 +17,13 @@ Use it out of the box, or extend it with your own aggregation logic!
 To install the aggrigator, clone the repository, navigate inside the directory and run the following command:
 
 ```bash
-pip install -e .
+pip install aggrigator
 ```
 
 now you can import the library in your python code with:
 
 ```python
 import aggrigator
-```
-
-## Testing
-
-To run the tests locally, navigate inside the aggrigator directory and first install the dev dependencies if needed:
-
-```bash
-pip install .[dev]
-```
-
-and then run the tests with:
-
-```bash
-pytest tests
 ```
 
 ## Try it out yourself
