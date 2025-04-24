@@ -3,8 +3,8 @@ requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "aggrigator"         # your package name
-version = "0.1.0b1"           # initial version
+name = "aggrigator"
+version = "0.1.0b1"
 description = "A Python package for aggregation tasks"
 authors = [
   { name="Christoph Karg", email="christoph.karg@mdc-berlin.de" }
