@@ -14,7 +14,7 @@ Use it out of the box, or extend it with your own aggregation logic!
 
 ## Installation
 
-To install the aggrigator, clone the repository, navigate inside the directory and run the following command:
+To install the aggrigator, clone the repository and navigate inside the directory, run the following command:
 
 ```bash
 pip install aggrigator
