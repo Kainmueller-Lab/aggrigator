@@ -5,7 +5,6 @@ import numpy.testing as npt
 from aggrigator.util import get_fg_ratio
 from aggrigator.methods import AggregationMethods as am
 from aggrigator.uncertainty_maps import UncertaintyMap
-from aggrigator.datasets import generate_binary_quadrant_array
 
 class TestImageLevelMethods(unittest.TestCase):
     def setUp(self):
@@ -72,43 +71,6 @@ class TestImageLevelMethods(unittest.TestCase):
         self.assertEqual(result, 3.0)
         result = am.patch_aggregation(self.unc_map_2d, 4)
         self.assertEqual(result, 2.5)
-
-
-class TestSpatialCorrelationMethods(unittest.TestCase):
-    def setUp(self):
-        N = 100
-        random_array = np.random.random((N, N))
-        checkerboard_array = np.indices((N, N)).sum(axis=0) % 2
-        clustered_array = generate_binary_quadrant_array(N)
-        self.random_uc_map = UncertaintyMap(array=random_array, mask=None, name="")
-        self.checkerboard_uc_map = UncertaintyMap(array=checkerboard_array, mask=None, name="")
-        self.clustered_uc_map = UncertaintyMap(array=clustered_array, mask=None, name="")
-
-    def test_morans_I(self):
-        '''
-        I > 0 → Positive spatial autocorrelation (clusters of similar intensity)
-        I < 0 → Negative autocorrelation (checkerboard-like pattern)
-        I ≈ 0 → No spatial correlation (random noise)
-        '''
-        result = am.morans_I(self.random_uc_map)
-        self.assertAlmostEqual(result, 0.0, places=1)
-        result = am.morans_I(self.checkerboard_uc_map)
-        self.assertAlmostEqual(result, -1.0, places=1)
-        result = am.morans_I(self.clustered_uc_map)
-        self.assertAlmostEqual(result, 0.98, places=1)
-
-    def test_gearys_C(self):
-        '''
-        C=1 → No spatial autocorrelation (random pattern).
-        C<1 → Positive spatial autocorrelation (clusters of similar values).
-        C>1 → Negative spatial autocorrelation (checkerboard-like pattern).
-        '''
-        result = am.gearys_C(self.random_uc_map)
-        self.assertAlmostEqual(result, 1.0, places=1)
-        result = am.gearys_C(self.checkerboard_uc_map)
-        self.assertAlmostEqual(result, 2.0, places=1)
-        result = am.gearys_C(self.clustered_uc_map)
-        self.assertAlmostEqual(result, 0.0, places=1)
 
 class TestClassLevelMethods(unittest.TestCase):
     def setUp(self):

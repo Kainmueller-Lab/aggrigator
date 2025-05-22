@@ -5,8 +5,8 @@ from scipy.signal import convolve
 from scipy.stats import gmean, hmean
 
 from aggrigator.util import get_id_mask, get_id_mask_boundary, get_id_mask_interior, get_fg_ratio
-from aggrigator.optimized_gearys import fast_gearys_C
-from aggrigator.optimized_morans import fast_morans_I
+from aggrigator.spatial import fast_gearys_C
+from aggrigator.spatial import fast_morans_I
 
 
 class AggregationMethods:
@@ -351,7 +351,7 @@ class AggregationMethods:
         float
             Moran's I value for the uncertainty array.
         """
-        return fast_morans_I(unc_map)
+        return fast_morans_I(unc_map.array)
 
     @staticmethod
     def gearys_C(unc_map, param=None):
@@ -374,7 +374,7 @@ class AggregationMethods:
         float
             Geary's C value for the uncertainty array.
         """
-        return fast_gearys_C(unc_map)
+        return fast_gearys_C(unc_map.array)
 
 
     # ------------------------- Class Based Methods -------------------------
