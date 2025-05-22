@@ -1,7 +1,9 @@
 import numpy as np
-from numba import jit
 import libpysal
+
+from numba import jit
 from scipy.ndimage import sobel
+
 
 
 @jit(nopython=True)
@@ -233,7 +235,3 @@ def local_moran(window, param=None):
         float: Moran's I score in [0, 1].
     """
     return max(0, fast_morans_I(window))
-    
-
-
-

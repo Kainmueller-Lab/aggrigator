@@ -2,6 +2,7 @@ import unittest
 import numpy as np
 
 from aggrigator.spatial import local_entropy, local_eds, local_moran, fast_morans_I
+from aggrigator.spatial_decomposition import spatial_decomposition
 from aggrigator.datasets import generate_binary_quadrant_array
 from aggrigator.methods import AggregationMethods as am
 from aggrigator.uncertainty_maps import UncertaintyMap
@@ -100,6 +101,45 @@ class TestLocalSpatialMeasures(unittest.TestCase):
         self.assertAlmostEqual(true_morans, -1.0, msg="Actual Moran's I of checkerboard window should be -1")
         adapted_morans = local_moran(self.checkerboard_window)
         self.assertAlmostEqual(adapted_morans, 0.0, msg="Adapted Moran's I of checkerboard window should be 0")
+
+
+class TestSpatialDecomposition(unittest.TestCase):
+    def setUp(self):
+        N = 100
+        random_array = np.random.random((N, N))
+        checkerboard_array = np.indices((N, N)).sum(axis=0) % 2
+        clustered_array = generate_binary_quadrant_array(N)
+        edge_array = np.zeros((N, N))
+        edge_array[2:4] = 1
+        self.random_uc_map = UncertaintyMap(array=random_array, mask=None, name="")
+        self.checkerboard_uc_map = UncertaintyMap(array=checkerboard_array, mask=None, name="")
+        self.clustered_uc_map = UncertaintyMap(array=clustered_array, mask=None, name="")
+        self.edge_uc_map = UncertaintyMap(array=edge_array, mask=None, name="")
+
+    def test_moran(self):
+        _, _, _, high_spatial_mass_ratio = spatial_decomposition(self.random_uc_map, window_size=3, spatial_measure="moran")
+        self.assertAlmostEqual(high_spatial_mass_ratio, 0.0, places=1)
+        _, _, _, high_spatial_mass_ratio = spatial_decomposition(self.checkerboard_uc_map, window_size=3, spatial_measure="moran")
+        self.assertAlmostEqual(high_spatial_mass_ratio, 0.0, places=1)
+        _, _, _, high_spatial_mass_ratio = spatial_decomposition(self.clustered_uc_map, window_size=3, spatial_measure="moran")
+        self.assertAlmostEqual(high_spatial_mass_ratio, 1.0, places=1)
+
+
+    def test_eds(self):
+        _, _, _, high_spatial_mass_ratio = spatial_decomposition(self.random_uc_map, window_size=3, spatial_measure="eds")
+        self.assertAlmostEqual(high_spatial_mass_ratio, 1.0, places=1)
+        _, _, _, high_spatial_mass_ratio = spatial_decomposition(self.edge_uc_map, window_size=3, spatial_measure="eds")
+        self.assertAlmostEqual(high_spatial_mass_ratio, 0.7, places=1)
+        _, _, _, high_spatial_mass_ratio = spatial_decomposition(self.clustered_uc_map, window_size=3, spatial_measure="eds")
+        self.assertAlmostEqual(high_spatial_mass_ratio, 0.0, places=1)
+
+    def test_entropy(self):
+        _, _, _, high_spatial_mass_ratio = spatial_decomposition(self.random_uc_map, window_size=3, spatial_measure="entropy")
+        self.assertAlmostEqual(high_spatial_mass_ratio, 0.9, places=1)
+        _, _, _, high_spatial_mass_ratio = spatial_decomposition(self.checkerboard_uc_map, window_size=3, spatial_measure="entropy")
+        self.assertAlmostEqual(high_spatial_mass_ratio, 0.5, places=1)
+        _, _, _, high_spatial_mass_ratio = spatial_decomposition(self.clustered_uc_map, window_size=3, spatial_measure="entropy")
+        self.assertAlmostEqual(high_spatial_mass_ratio, 0.0, places=1)
 
 
 if __name__ == "__main__":
