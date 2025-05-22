@@ -41,8 +41,8 @@ def spatial_decomposition(unc_map, window_size, spatial_measure, param=None):
     elif spatial_measure == 'entropy':
         local_measure = local_entropy
     else:
-        warnings.warn(f"Invalid spatial measure {spatial_measure}. Using entropy as default.")
-        local_measure = local_entropy
+        warnings.warn(f"Invalid spatial measure {spatial_measure}. Using Moran's as default.")
+        local_measure = local_moran
 
     # Sliding window loop
     for y in range(H):
@@ -54,8 +54,8 @@ def spatial_decomposition(unc_map, window_size, spatial_measure, param=None):
 
     high_spatial_mass_ratio = np.sum(weighted_map) / np.sum(unc_array)
 
-    return (UncertaintyMap(array=weighted_map, mask=unc_map.mask, name=f"weighted_{spatial_measure}_{window_size}"),
-            UncertaintyMap(array=inv_weighted_map, mask=unc_map.mask, name=f"unweighted_{spatial_measure}_{window_size}"),
+    return (UncertaintyMap(array=weighted_map, mask=unc_map.mask, name=f"high_{spatial_measure}_filter_size_{window_size}"),
+            UncertaintyMap(array=inv_weighted_map, mask=unc_map.mask, name=f"low_{spatial_measure}_filter_size_{window_size}"),
             weight_map,
             high_spatial_mass_ratio)
     
