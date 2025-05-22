@@ -225,13 +225,25 @@ class TestAggregatedClassMean(unittest.TestCase):
         self.unc_map = UncertaintyMap(array=self.unc_values, mask=self.mask, name=self.name)
 
     def test_class_mean_w_equal_weights(self):
-        result = am.class_mean_w_equal_weights(self.unc_map)
+        include_background = False # Exclude background
+        result = am.class_mean_w_equal_weights(self.unc_map, include_background)
         expected = 0.8 * 0.5 + 2.4 *0.5
         self.assertEqual(result, expected)
 
+        include_background = True # Include background
+        result = am.class_mean_w_equal_weights(self.unc_map, include_background)
+        expected = 0.8 * 1/3 + 2.4 * 1/3 + 0 * 1/3
+        self.assertEqual(result, expected)
+
     def test_class_mean_weighted_by_occurrence(self):
-        result = am.class_mean_weighted_by_occurrence(self.unc_map)
+        include_background = False # Exclude background
+        result = am.class_mean_weighted_by_occurrence(self.unc_map, include_background)
         expected = 0.8 * 9/17 + 2.4 * 8/17
+        self.assertEqual(result, expected)
+
+        include_background = True # Include background
+        result = am.class_mean_weighted_by_occurrence(self.unc_map, include_background)
+        expected = 0.8 * 9/25 + 2.4 * 8/25 + 0 * 8/25
         self.assertEqual(result, expected)
 
     def test_class_mean_w_custom_weights(self):

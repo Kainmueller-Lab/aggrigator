@@ -486,24 +486,24 @@ class AggregationMethods:
             return sum(class_means[id] * weights[id] for id in class_ids), weights
         return sum(class_means[id] * weights[id] for id in class_ids)
 
-    def class_mean_w_equal_weights(unc_map, param=None, return_weights=False):
-        # NOTE: We exclude BG class 0
-        # TODO: Add inlcude BG option?
-        fg_classes = [class_id for class_id in unc_map.class_indices if not class_id == 0]
+    def class_mean_w_equal_weights(unc_map, param=False, return_weights=False):
+        include_background = param
+        # NOTE: We exclude BG class 0 if include_background is False
+        classes = [class_id for class_id in unc_map.class_indices if not (class_id == 0 and not include_background)]
         # Use equal weights for all classes
-        weights = {id: 1 / len(fg_classes) for id in fg_classes}
+        weights = {id: 1 / len(classes) for id in classes}
         return AggregationMethods.class_mean_w_custom_weights(unc_map, weights, return_weights)
 
     def class_mean_weighted_by_occurrence(unc_map, param=None, return_weights=False):
-        # NOTE: We exclude BG class 0
-        # TODO: Add inlcude BG option?
-        fg_classes = [class_id for class_id in unc_map.class_indices if not class_id == 0]
+        include_background = param
+        # NOTE: We exclude BG class 0 if include_background is False
+        classes = [class_id for class_id in unc_map.class_indices if not (class_id == 0 and not include_background)]
         # Count class pixels 
         class_pixel_counts = {class_id: get_id_mask(unc_map.mask, class_id).sum()
-                              for class_id in fg_classes}
+                              for class_id in classes}
         fg_pixel_count = np.sum(list(class_pixel_counts.values()))
         # Use weights proportional to the number of pixels in each class
-        weights = {id: class_pixel_counts[id] / fg_pixel_count for id in fg_classes}
+        weights = {id: class_pixel_counts[id] / fg_pixel_count for id in classes}
         return AggregationMethods.class_mean_w_custom_weights(unc_map, weights, return_weights)
 
 
