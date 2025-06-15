@@ -174,7 +174,7 @@ def local_entropy(window, param=None):
     if np.isclose(vmin, vmax):
         return 0.0  # No variation → zero entropy
 
-    bins = param["bins"] if param else 4
+    bins = param["bins"] if param else 4 # TODO: Default bins = 4, make this a parameter
     hist, _ = np.histogram(window, bins=bins, range=(vmin, vmax), density=False)
     hist = hist.astype(np.float32)
 
