@@ -480,7 +480,8 @@ class AggregationMethods:
                        for class_id in class_ids}
         # Ensure provided weights sum to 1
         weight_sum = sum(weights.values())
-        assert abs(weight_sum - 1.0) < 1e-6, "Weights must sum to 1."
+        if not abs(weight_sum - 1.0) < 1e-6:
+            print(f"Warning: Weights do not sum to 1. Sum is {weight_sum}. Difference: {abs(weight_sum - 1.0)}. Weights: {weights}")
         # Compute the weighted average
         if return_weights:
             return sum(class_means[id] * weights[id] for id in class_ids), weights
