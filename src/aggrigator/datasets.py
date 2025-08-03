@@ -103,7 +103,7 @@ def generate_two_dim_sin_cos_wave(x_max, y_max, freq_x=1, freq_y=1, phase_x=0, p
 
     array = np.sin(2 * np.pi * freq_x * xx + phase_x) + np.cos(2 * np.pi * freq_y * yy + phase_y)
 
-    return array, f'${{\sin}}$(${{2\pi}}$*{freq_x}*x + {phase_x}) + ${{\cos}}$(${{2\pi}}$*{freq_y}*y + {phase_y})'
+    return array, rf'${{\sin}}$(${{2\pi}}$*{freq_x}*x + {phase_x}) + ${{\cos}}$(${{2\pi}}$*{freq_y}*y + {phase_y})'
 
 
 def generate_binary_quadrant_array(size):
