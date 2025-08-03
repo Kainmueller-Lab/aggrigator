@@ -5,8 +5,8 @@ from scipy.signal import convolve
 from scipy.stats import gmean, hmean
 
 from aggrigator.util import get_id_mask, get_id_mask_boundary, get_id_mask_interior, get_fg_ratio
-from aggrigator.optimized_gearys import fast_gearys_C
-from aggrigator.optimized_morans import fast_morans_I
+from aggrigator.spatial import fast_gearys_C
+from aggrigator.spatial import fast_morans_I
 
 
 class AggregationMethods:
@@ -351,7 +351,7 @@ class AggregationMethods:
         float
             Moran's I value for the uncertainty array.
         """
-        return fast_morans_I(unc_map)
+        return fast_morans_I(unc_map.array)
 
     @staticmethod
     def gearys_C(unc_map, param=None):
@@ -374,7 +374,7 @@ class AggregationMethods:
         float
             Geary's C value for the uncertainty array.
         """
-        return fast_gearys_C(unc_map)
+        return fast_gearys_C(unc_map.array)
 
 
     # ------------------------- Class Based Methods -------------------------
@@ -480,30 +480,31 @@ class AggregationMethods:
                        for class_id in class_ids}
         # Ensure provided weights sum to 1
         weight_sum = sum(weights.values())
-        assert abs(weight_sum - 1.0) < 1e-6, "Weights must sum to 1."
+        if not abs(weight_sum - 1.0) < 1e-6:
+            print(f"Warning: Weights do not sum to 1. Sum is {weight_sum}. Difference: {abs(weight_sum - 1.0)}. Weights: {weights}")
         # Compute the weighted average
         if return_weights:
             return sum(class_means[id] * weights[id] for id in class_ids), weights
         return sum(class_means[id] * weights[id] for id in class_ids)
 
-    def class_mean_w_equal_weights(unc_map, param=None, return_weights=False):
-        # NOTE: We exclude BG class 0
-        # TODO: Add inlcude BG option?
-        fg_classes = [class_id for class_id in unc_map.class_indices if not class_id == 0]
+    def class_mean_w_equal_weights(unc_map, param=False, return_weights=False):
+        include_background = param
+        # NOTE: We exclude BG class 0 if include_background is False
+        classes = [class_id for class_id in unc_map.class_indices if not (class_id == 0 and not include_background)]
         # Use equal weights for all classes
-        weights = {id: 1 / len(fg_classes) for id in fg_classes}
+        weights = {id: 1 / len(classes) for id in classes}
         return AggregationMethods.class_mean_w_custom_weights(unc_map, weights, return_weights)
 
     def class_mean_weighted_by_occurrence(unc_map, param=None, return_weights=False):
-        # NOTE: We exclude BG class 0
-        # TODO: Add inlcude BG option?
-        fg_classes = [class_id for class_id in unc_map.class_indices if not class_id == 0]
+        include_background = param
+        # NOTE: We exclude BG class 0 if include_background is False
+        classes = [class_id for class_id in unc_map.class_indices if not (class_id == 0 and not include_background)]
         # Count class pixels 
         class_pixel_counts = {class_id: get_id_mask(unc_map.mask, class_id).sum()
-                              for class_id in fg_classes}
+                              for class_id in classes}
         fg_pixel_count = np.sum(list(class_pixel_counts.values()))
         # Use weights proportional to the number of pixels in each class
-        weights = {id: class_pixel_counts[id] / fg_pixel_count for id in fg_classes}
+        weights = {id: class_pixel_counts[id] / fg_pixel_count for id in classes}
         return AggregationMethods.class_mean_w_custom_weights(unc_map, weights, return_weights)
 
 
