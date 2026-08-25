@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the paper below."
+title: "aggrigator"
+version: "0.0.1"
+authors:
+  - family-names: Guarino
+    given-names: Vanessa Emanuela
+  - family-names: Winklmayr
+    given-names: Claudia
+  - family-names: Franzen
+    given-names: Jannik
+  - family-names: Rumberger
+    given-names: Josef Lorenz
+  - family-names: Pfeuffer
+    given-names: Manuel
+  - family-names: Greven
+    given-names: Sonja
+  - family-names: Maier-Hein
+    given-names: Klaus
+  - family-names: Lüth
+    given-names: Carsten T.
+  - family-names: Karg
+    given-names: Christoph
+  - family-names: Kainmüller
+    given-names: Dagmar
+
+repository-code: "https://github.com/Kainmueller-Lab/aggrigator"
+url: "https://github.com/Kainmueller-Lab/aggrigator"
