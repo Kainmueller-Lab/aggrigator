@@ -18,7 +18,7 @@ To install Aggrigator, first make sure you have ``python>=3.10`` installed in yo
 ```bash
 pip install aggrigator
 ```
-To install the development version, clone the repository and navigate inside the directory, then run the following command:
+**or** to install the development version, clone the repository and navigate inside the directory, then run the following command:
 
 ```bash
 pip install .
